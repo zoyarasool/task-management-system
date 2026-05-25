@@ -31,6 +31,7 @@ function TaskList() {
   const fetchTasks = async () => {
     try {
       const data = await getTasks();
+
       setTasks(data);
     } catch (error) {
       console.log(error);
@@ -38,26 +39,26 @@ function TaskList() {
   };
 
   // DELETE TASK
-const handleDelete = async (id) => {
-  const confirmDelete =
-    window.confirm(
-      "Are you sure you want to delete this task?"
-    );
+  const handleDelete = async (id) => {
+    const confirmDelete =
+      window.confirm(
+        "Are you sure you want to delete this task?"
+      );
 
-  if (!confirmDelete) {
-    return;
-  }
+    if (!confirmDelete) {
+      return;
+    }
 
-  try {
-    await deleteTask(id);
+    try {
+      await deleteTask(id);
 
-    fetchTasks();
-  } catch (error) {
-    console.log(error);
-  }
-};
+      fetchTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  // FILTERED TASKS
+  // FILTER TASKS
   const filteredTasks = tasks.filter(
     (task) => {
       const matchesSearch =
@@ -77,9 +78,65 @@ const handleDelete = async (id) => {
     }
   );
 
+  // DASHBOARD COUNTS
+  const totalTasks = tasks.length;
+
+  const completedTasks = tasks.filter(
+    (task) =>
+      task.status === "Completed"
+  ).length;
+
+  const pendingTasks = tasks.filter(
+    (task) => task.status === "Pending"
+  ).length;
+
+  const inProgressTasks = tasks.filter(
+    (task) =>
+      task.status === "In Progress"
+  ).length;
+
   return (
     <div>
-      {/* TASK FORM */}
+      {/* DASHBOARD */}
+      <div className="row mb-4">
+        {/* TOTAL */}
+        <div className="col-md-3">
+          <div className="card text-center shadow p-3">
+            <h5>Total Tasks</h5>
+
+            <h2>{totalTasks}</h2>
+          </div>
+        </div>
+
+        {/* COMPLETED */}
+        <div className="col-md-3">
+          <div className="card text-center shadow p-3">
+            <h5>Completed</h5>
+
+            <h2>{completedTasks}</h2>
+          </div>
+        </div>
+
+        {/* PENDING */}
+        <div className="col-md-3">
+          <div className="card text-center shadow p-3">
+            <h5>Pending</h5>
+
+            <h2>{pendingTasks}</h2>
+          </div>
+        </div>
+
+        {/* IN PROGRESS */}
+        <div className="col-md-3">
+          <div className="card text-center shadow p-3">
+            <h5>In Progress</h5>
+
+            <h2>{inProgressTasks}</h2>
+          </div>
+        </div>
+      </div>
+
+      {/* FORM */}
       <TaskForm
         fetchTasks={fetchTasks}
         editingTask={editingTask}
@@ -92,7 +149,7 @@ const handleDelete = async (id) => {
           Search & Filter
         </h3>
 
-        {/* SEARCH INPUT */}
+        {/* SEARCH */}
         <div className="mb-3">
           <input
             type="text"
@@ -137,7 +194,7 @@ const handleDelete = async (id) => {
         </div>
       </div>
 
-      {/* TASK LIST */}
+      {/* TASKS */}
       <h2 className="mb-3">
         All Tasks
       </h2>
