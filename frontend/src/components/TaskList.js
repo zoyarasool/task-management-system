@@ -7,7 +7,7 @@ import {
 
 import TaskForm from "./TaskForm";
 
-function TaskList() {
+function TaskList({ darkMode }) {
   // TASKS
   const [tasks, setTasks] = useState([]);
 
@@ -95,40 +95,41 @@ function TaskList() {
       task.status === "In Progress"
   ).length;
 
+  // CARD STYLE
+  const cardClass = darkMode
+    ? "card bg-secondary text-light shadow p-3"
+    : "card shadow p-3";
+
   return (
     <div>
       {/* DASHBOARD */}
       <div className="row mb-4">
-        {/* TOTAL */}
         <div className="col-md-3">
-          <div className="card text-center shadow p-3">
+          <div className={cardClass}>
             <h5>Total Tasks</h5>
 
             <h2>{totalTasks}</h2>
           </div>
         </div>
 
-        {/* COMPLETED */}
         <div className="col-md-3">
-          <div className="card text-center shadow p-3">
+          <div className={cardClass}>
             <h5>Completed</h5>
 
             <h2>{completedTasks}</h2>
           </div>
         </div>
 
-        {/* PENDING */}
         <div className="col-md-3">
-          <div className="card text-center shadow p-3">
+          <div className={cardClass}>
             <h5>Pending</h5>
 
             <h2>{pendingTasks}</h2>
           </div>
         </div>
 
-        {/* IN PROGRESS */}
         <div className="col-md-3">
-          <div className="card text-center shadow p-3">
+          <div className={cardClass}>
             <h5>In Progress</h5>
 
             <h2>{inProgressTasks}</h2>
@@ -144,7 +145,7 @@ function TaskList() {
       />
 
       {/* SEARCH + FILTER */}
-      <div className="card p-3 shadow-sm mb-4">
+      <div className={`${cardClass} mb-4`}>
         <h3 className="mb-3">
           Search & Filter
         </h3>
@@ -207,7 +208,7 @@ function TaskList() {
         filteredTasks.map((task) => (
           <div
             key={task._id}
-            className="card shadow-sm p-3 mb-3"
+            className={`${cardClass} mb-3`}
           >
             <h4>{task.title}</h4>
 
