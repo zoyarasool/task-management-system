@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import {
   createTask,
   updateTask,
@@ -12,24 +13,50 @@ function TaskForm({
   const [title, setTitle] = useState("");
   const [description, setDescription] =
     useState("");
+
   const [status, setStatus] =
     useState("Pending");
-  const [dueDate, setDueDate] = useState("");
 
-  // Fill form when editing
+  const [dueDate, setDueDate] =
+    useState("");
+
+  // ALERT MESSAGE
+  const [message, setMessage] =
+    useState("");
+
+  // FILL FORM WHEN EDITING
   useEffect(() => {
     if (editingTask) {
       setTitle(editingTask.title);
-      setDescription(editingTask.description);
+
+      setDescription(
+        editingTask.description
+      );
+
       setStatus(editingTask.status);
+
       setDueDate(
         editingTask.dueDate.split("T")[0]
       );
     }
   }, [editingTask]);
 
+  // SUBMIT FORM
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // VALIDATION
+    if (
+      !title ||
+      !description ||
+      !dueDate
+    ) {
+      setMessage(
+        "Please fill all fields"
+      );
+
+      return;
+    }
 
     const taskData = {
       title,
@@ -39,25 +66,46 @@ function TaskForm({
     };
 
     try {
+      // UPDATE
       if (editingTask) {
         await updateTask(
           editingTask._id,
           taskData
         );
+
+        setMessage(
+          "Task updated successfully"
+        );
+
         setEditingTask(null);
-      } else {
-        await createTask(taskData);
       }
 
+      // CREATE
+      else {
+        await createTask(taskData);
+
+        setMessage(
+          "Task added successfully"
+        );
+      }
+
+      // REFRESH TASKS
       fetchTasks();
 
-      // reset form
+      // RESET FORM
       setTitle("");
       setDescription("");
       setStatus("Pending");
       setDueDate("");
+
+      // CLEAR MESSAGE AFTER 3 SECONDS
+      setTimeout(() => {
+        setMessage("");
+      }, 3000);
     } catch (error) {
       console.log(error);
+
+      setMessage("Something went wrong");
     }
   };
 
@@ -68,6 +116,13 @@ function TaskForm({
           ? "Edit Task"
           : "Add New Task"}
       </h2>
+
+      {/* ALERT */}
+      {message && (
+        <div className="alert alert-info">
+          {message}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         {/* TITLE */}
@@ -105,12 +160,16 @@ function TaskForm({
             }
           >
             <option>Pending</option>
-            <option>In Progress</option>
+
+            <option>
+              In Progress
+            </option>
+
             <option>Completed</option>
           </select>
         </div>
 
-        {/* DUE DATE */}
+        {/* DATE */}
         <div className="mb-3">
           <input
             type="date"

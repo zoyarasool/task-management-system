@@ -38,14 +38,24 @@ function TaskList() {
   };
 
   // DELETE TASK
-  const handleDelete = async (id) => {
-    try {
-      await deleteTask(id);
-      fetchTasks();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+const handleDelete = async (id) => {
+  const confirmDelete =
+    window.confirm(
+      "Are you sure you want to delete this task?"
+    );
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  try {
+    await deleteTask(id);
+
+    fetchTasks();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // FILTERED TASKS
   const filteredTasks = tasks.filter(
