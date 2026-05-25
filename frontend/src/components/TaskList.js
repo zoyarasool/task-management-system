@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   getTasks,
   deleteTask,
@@ -7,11 +8,22 @@ import {
 import TaskForm from "./TaskForm";
 
 function TaskList() {
+  // TASKS
   const [tasks, setTasks] = useState([]);
+
+  // EDIT TASK
   const [editingTask, setEditingTask] =
     useState(null);
 
-  // fetch tasks
+  // SEARCH
+  const [searchTerm, setSearchTerm] =
+    useState("");
+
+  // FILTER
+  const [statusFilter, setStatusFilter] =
+    useState("All");
+
+  // FETCH TASKS
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -25,7 +37,7 @@ function TaskList() {
     }
   };
 
-  // delete task
+  // DELETE TASK
   const handleDelete = async (id) => {
     try {
       await deleteTask(id);
@@ -35,22 +47,97 @@ function TaskList() {
     }
   };
 
+  // FILTERED TASKS
+  const filteredTasks = tasks.filter(
+    (task) => {
+      const matchesSearch =
+        task.title
+          .toLowerCase()
+          .includes(
+            searchTerm.toLowerCase()
+          );
+
+      const matchesStatus =
+        statusFilter === "All" ||
+        task.status === statusFilter;
+
+      return (
+        matchesSearch && matchesStatus
+      );
+    }
+  );
+
   return (
     <div>
-      {/* FORM */}
+      {/* TASK FORM */}
       <TaskForm
         fetchTasks={fetchTasks}
         editingTask={editingTask}
         setEditingTask={setEditingTask}
       />
 
-      <h2 className="mb-3">All Tasks</h2>
+      {/* SEARCH + FILTER */}
+      <div className="card p-3 shadow-sm mb-4">
+        <h3 className="mb-3">
+          Search & Filter
+        </h3>
+
+        {/* SEARCH INPUT */}
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search by title..."
+            value={searchTerm}
+            onChange={(e) =>
+              setSearchTerm(
+                e.target.value
+              )
+            }
+          />
+        </div>
+
+        {/* FILTER */}
+        <div>
+          <select
+            className="form-select"
+            value={statusFilter}
+            onChange={(e) =>
+              setStatusFilter(
+                e.target.value
+              )
+            }
+          >
+            <option value="All">
+              All Tasks
+            </option>
+
+            <option value="Pending">
+              Pending
+            </option>
+
+            <option value="In Progress">
+              In Progress
+            </option>
+
+            <option value="Completed">
+              Completed
+            </option>
+          </select>
+        </div>
+      </div>
 
       {/* TASK LIST */}
-      {tasks.length === 0 ? (
-        <p>No tasks found</p>
+      <h2 className="mb-3">
+        All Tasks
+      </h2>
+
+      {filteredTasks.length === 0 ? (
+        <div className="alert alert-warning">
+          No tasks found
+        </div>
       ) : (
-        tasks.map((task) => (
+        filteredTasks.map((task) => (
           <div
             key={task._id}
             className="card shadow-sm p-3 mb-3"
@@ -60,11 +147,12 @@ function TaskList() {
             <p>{task.description}</p>
 
             <p>
-              <b>Status:</b> {task.status}
+              <strong>Status:</strong>{" "}
+              {task.status}
             </p>
 
             <p>
-              <b>Due Date:</b>{" "}
+              <strong>Due Date:</strong>{" "}
               {new Date(
                 task.dueDate
               ).toLocaleDateString()}
