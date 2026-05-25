@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import {
   createTask,
   updateTask,
@@ -13,31 +12,22 @@ function TaskForm({
   const [title, setTitle] = useState("");
   const [description, setDescription] =
     useState("");
-
   const [status, setStatus] =
     useState("Pending");
+  const [dueDate, setDueDate] = useState("");
 
-  const [dueDate, setDueDate] =
-    useState("");
-
-  // FILL FORM WHEN EDIT BUTTON CLICKED
+  // Fill form when editing
   useEffect(() => {
     if (editingTask) {
       setTitle(editingTask.title);
-
-      setDescription(
-        editingTask.description
-      );
-
+      setDescription(editingTask.description);
       setStatus(editingTask.status);
-
       setDueDate(
         editingTask.dueDate.split("T")[0]
       );
     }
   }, [editingTask]);
 
-  // FORM SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -49,25 +39,19 @@ function TaskForm({
     };
 
     try {
-      // UPDATE TASK
       if (editingTask) {
         await updateTask(
           editingTask._id,
           taskData
         );
-
         setEditingTask(null);
-      }
-
-      // CREATE TASK
-      else {
+      } else {
         await createTask(taskData);
       }
 
-      // REFRESH TASK LIST
       fetchTasks();
 
-      // CLEAR FORM
+      // reset form
       setTitle("");
       setDescription("");
       setStatus("Pending");
@@ -78,8 +62,8 @@ function TaskForm({
   };
 
   return (
-    <div>
-      <h2>
+    <div className="card shadow p-4 mb-4">
+      <h2 className="mb-3">
         {editingTask
           ? "Edit Task"
           : "Add New Task"}
@@ -87,68 +71,67 @@ function TaskForm({
 
       <form onSubmit={handleSubmit}>
         {/* TITLE */}
-        <input
-          type="text"
-          placeholder="Enter title"
-          value={title}
-          onChange={(e) =>
-            setTitle(e.target.value)
-          }
-        />
-
-        <br />
-        <br />
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Task Title"
+            value={title}
+            onChange={(e) =>
+              setTitle(e.target.value)
+            }
+          />
+        </div>
 
         {/* DESCRIPTION */}
-        <textarea
-          placeholder="Enter description"
-          value={description}
-          onChange={(e) =>
-            setDescription(e.target.value)
-          }
-        />
-
-        <br />
-        <br />
+        <div className="mb-3">
+          <textarea
+            className="form-control"
+            placeholder="Task Description"
+            value={description}
+            onChange={(e) =>
+              setDescription(e.target.value)
+            }
+          />
+        </div>
 
         {/* STATUS */}
-        <select
-          value={status}
-          onChange={(e) =>
-            setStatus(e.target.value)
-          }
-        >
-          <option>Pending</option>
-
-          <option>In Progress</option>
-
-          <option>Completed</option>
-        </select>
-
-        <br />
-        <br />
+        <div className="mb-3">
+          <select
+            className="form-select"
+            value={status}
+            onChange={(e) =>
+              setStatus(e.target.value)
+            }
+          >
+            <option>Pending</option>
+            <option>In Progress</option>
+            <option>Completed</option>
+          </select>
+        </div>
 
         {/* DUE DATE */}
-        <input
-          type="date"
-          value={dueDate}
-          onChange={(e) =>
-            setDueDate(e.target.value)
-          }
-        />
-
-        <br />
-        <br />
+        <div className="mb-3">
+          <input
+            type="date"
+            className="form-control"
+            value={dueDate}
+            onChange={(e) =>
+              setDueDate(e.target.value)
+            }
+          />
+        </div>
 
         {/* BUTTON */}
-        <button type="submit">
+        <button
+          type="submit"
+          className="btn btn-primary"
+        >
           {editingTask
             ? "Update Task"
             : "Add Task"}
         </button>
       </form>
-
-      <hr />
     </div>
   );
 }
