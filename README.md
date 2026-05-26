@@ -102,5 +102,5 @@ Through this project, I learned:
 ---
 ## Author
 Zoya Rasool
-GitHub:
-https://github.com/zoyarasool
+
+GitHub: https://github.com/zoyarasool
