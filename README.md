@@ -1,11 +1,6 @@
 # Task Management System
 A full stack MERN Task Management System developed during my Software Development Internship at DevelopersHub Corporation.
 
-## Live Demo
-
-Live Project URL:
-http://20.219.22.113/
-
 ## Features
 - Add Tasks
 - View Tasks
