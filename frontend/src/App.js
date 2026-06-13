@@ -6,6 +6,7 @@ import TaskList from "./components/TaskList";
 import AuthPage from "./pages/AuthPage";
 import NotificationSidebar from "./components/NotificationSidebar";
 import { getCurrentUser, logout } from "./services/authService";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -13,6 +14,7 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [newNotification, setNewNotification] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [activeTab, setActiveTab] = useState("tasks");
 
   // CHECK IF USER IS ALREADY LOGGED IN
   useEffect(() => {
@@ -160,12 +162,37 @@ function App() {
           </div>
         )}
 
-        {/* SHOW AUTH PAGE OR TASK LIST */}
+        {/* NAVIGATION TABS */}
+        {user && (
+          <ul className="nav nav-tabs mb-4">
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "tasks" ? "active" : ""}`}
+                onClick={() => setActiveTab("tasks")}
+              >
+                📋 Tasks
+              </button>
+            </li>
+            <li className="nav-item">
+              <button
+                className={`nav-link ${activeTab === "analytics" ? "active" : ""}`}
+                onClick={() => setActiveTab("analytics")}
+              >
+                📊 Analytics
+              </button>
+            </li>
+          </ul>
+        )}
+
+        {/* SHOW AUTH PAGE OR TASK LIST OR ANALYTICS */}
         {!user ? (
           <AuthPage onLogin={handleLogin} darkMode={darkMode} />
-        ) : (
+        ) : activeTab === "tasks" ? (
           <TaskList darkMode={darkMode} />
+        ) : (
+          <AnalyticsDashboard darkMode={darkMode} />
         )}
+        
 
         {/* NOTIFICATION SIDEBAR */}
         {showNotifications && (
