@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const taskRoutes = require("./routes/taskRoutes");
 const authRoutes = require("./routes/authRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 dotenv.config();
 
@@ -65,6 +66,7 @@ app.use(express.json());
 app.use("/api/tasks", taskRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/users", userRoutes);
 
 // Default Route
 app.get("/", (req, res) => {
