@@ -1,5 +1,4 @@
 const express = require("express");
-
 const router = express.Router();
 
 const {
@@ -8,21 +7,31 @@ const {
   getTaskById,
   updateTask,
   deleteTask,
+  shareTask,
+  getSharedTasks,
 } = require("../controllers/taskController");
 
-// CREATE
-router.post("/", createTask);
+const { protect } = require("../middleware/authMiddleware");
 
-// READ ALL
-router.get("/", getTasks);
+// CREATE
+router.post("/", protect, createTask);
+
+// READ ALL (owned tasks)
+router.get("/", protect, getTasks);
+
+// GET TASKS SHARED WITH ME
+router.get("/shared", protect, getSharedTasks);
 
 // READ ONE
-router.get("/:id", getTaskById);
+router.get("/:id", protect, getTaskById);
 
 // UPDATE
-router.put("/:id", updateTask);
+router.put("/:id", protect, updateTask);
+
+// SHARE TASK
+router.put("/:id/share", protect, shareTask);
 
 // DELETE
-router.delete("/:id", deleteTask);
+router.delete("/:id", protect, deleteTask);
 
 module.exports = router;
