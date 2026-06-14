@@ -37,6 +37,16 @@ const taskSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+// NEW: file attachments
+    attachments: [
+      {
+        filename: String,
+        originalname: String,
+        mimetype: String,
+        size: Number,
+        path: String,
+      },
+    ],
   },
   {
     timestamps: true,

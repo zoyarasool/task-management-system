@@ -9,9 +9,11 @@ const {
   deleteTask,
   shareTask,
   getSharedTasks,
+  addAttachment,
 } = require("../controllers/taskController");
 
 const { protect } = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 
 // CREATE
 router.post("/", protect, createTask);
@@ -30,6 +32,9 @@ router.put("/:id", protect, updateTask);
 
 // SHARE TASK
 router.put("/:id/share", protect, shareTask);
+
+// ADD ATTACHMENT
+router.post("/:id/attachments", protect, upload.single("file"), addAttachment);
 
 // DELETE
 router.delete("/:id", protect, deleteTask);

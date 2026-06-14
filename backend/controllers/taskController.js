@@ -168,7 +168,38 @@ const getSharedTasks = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// ADD ATTACHMENT TO TASK
+const addAttachment = async (req, res) => {
+  try {
+    const task = await Task.findOne({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
 
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const attachment = {
+      filename: req.file.filename,
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      path: req.file.path,
+    };
+
+    task.attachments.push(attachment);
+    await task.save();
+
+    res.json({ message: "File uploaded successfully", task });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 module.exports = {
   createTask,
   getTasks,
@@ -177,4 +208,5 @@ module.exports = {
   deleteTask,
   shareTask,
   getSharedTasks,
+  addAttachment,
 };
